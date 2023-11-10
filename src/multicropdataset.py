@@ -387,7 +387,8 @@ def get_dataset(args):
     class_num = 2 if args.debug else 1000
     dataset = ImageFolder(args.data_path, transform=transform, class_num=class_num)
 
-    sampler = torch.utils.data.DistributedSampler(dataset, shuffle=True)
+    # sampler = torch.utils.data.DistributedSampler(dataset, shuffle=True)
+    sampler = torch.utils.data.RandomSampler(dataset)
     data_loader = torch.utils.data.DataLoader(
         dataset,
         sampler=sampler,

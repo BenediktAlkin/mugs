@@ -446,10 +446,10 @@ def train_mugs(args):
             f.write(str(args) + "\n")
 
     ##======== initilize distribution ============
-    if args.ddpjob is True:
-        utils.init_distributed_ddpjob(args)
-    else:
-        utils.init_distributed_mode(args)
+    # if args.ddpjob is True:
+    #     utils.init_distributed_ddpjob(args)
+    # else:
+    #     utils.init_distributed_mode(args)
 
     ##======== fix seed for reproduce ============
     utils.fix_random_seeds(args.seed)
@@ -472,18 +472,18 @@ def train_mugs(args):
     student_mem, teacher_mem = student_mem.cuda(), teacher_mem.cuda()
 
     # synchronize batch norms (if any)
-    if utils.has_batchnorms(student):
-        student = nn.SyncBatchNorm.convert_sync_batchnorm(student)
-        teacher = nn.SyncBatchNorm.convert_sync_batchnorm(teacher)
-        # we need DDP wrapper to have synchro batch norms working...
-        teacher = nn.parallel.DistributedDataParallel(teacher, device_ids=[args.gpu])
-        teacher_without_ddp = teacher.module
-    else:
-        # teacher_without_ddp and teacher are the same thing
-        teacher_without_ddp = teacher
-    student = nn.parallel.DistributedDataParallel(student, device_ids=[args.gpu])
+    # if utils.has_batchnorms(student):
+    #     student = nn.SyncBatchNorm.convert_sync_batchnorm(student)
+    #     teacher = nn.SyncBatchNorm.convert_sync_batchnorm(teacher)
+    #     # we need DDP wrapper to have synchro batch norms working...
+    #     teacher = nn.parallel.DistributedDataParallel(teacher, device_ids=[args.gpu])
+    #     teacher_without_ddp = teacher.module
+    # else:
+    #     # teacher_without_ddp and teacher are the same thing
+    #     teacher_without_ddp = teacher
+    # student = nn.parallel.DistributedDataParallel(student, device_ids=[args.gpu])
     # teacher and student start with the same weights
-    teacher_without_ddp.load_state_dict(student.module.state_dict(), strict=False)
+    teacher.load_state_dict(student.state_dict(), strict=False)
 
     # there is no backpropagation through the teacher, so no need for gradients
     for p in teacher.parameters():
@@ -518,13 +518,13 @@ def train_mugs(args):
     start_time = time.time()
     for epoch in range(start_epoch, args.epochs):
         t1 = time.time()
-        data_loader.sampler.set_epoch(epoch)
+        # data_loader.sampler.set_epoch(epoch)
 
         ##======== training one epoch of Mugs ============
         train_stats = train_one_epoch(
             student,
             teacher,
-            teacher_without_ddp,
+            teacher,
             all_losses,
             all_weights,
             data_loader,
