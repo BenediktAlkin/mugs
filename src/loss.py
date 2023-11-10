@@ -49,7 +49,7 @@ class InfoNCELoss(nn.Module):
         """
         queue update
         """
-        keys = concat_all_gather(keys)
+        # keys = concat_all_gather(keys)
         batch_size = keys.shape[0]
         ptr = int(self.queue_ptr)
         # replace the keys at ptr (dequeue and enqueue)

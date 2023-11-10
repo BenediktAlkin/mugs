@@ -295,10 +295,10 @@ class Block_mem(nn.Module):
         # import pdb
         # pdb.set_trace()
         len_weak = 0
-        query = concat_all_gather(query)
+        # query = concat_all_gather(query)
         if weak_aug_flags is not None:
             weak_aug_flags = weak_aug_flags.cuda()
-            weak_aug_flags = concat_all_gather(weak_aug_flags)
+            # weak_aug_flags = concat_all_gather(weak_aug_flags)
             idx_weak = torch.nonzero(weak_aug_flags)
             len_weak = len(idx_weak)
             if len_weak > 0:
