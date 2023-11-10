@@ -192,8 +192,8 @@ class ClusteringLoss(nn.Module):
         Update center used for teacher output.
         """
         batch_center = torch.mean(teacher_output, dim=0, keepdim=False)
-        dist.all_reduce(batch_center)
-        batch_center = batch_center / dist.get_world_size()
+        # dist.all_reduce(batch_center)
+        # batch_center = batch_center / dist.get_world_size()
 
         # ema update
         self.center = self.center * self.center_momentum + batch_center * (
