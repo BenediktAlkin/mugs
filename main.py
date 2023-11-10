@@ -51,8 +51,8 @@ def get_args_parser():
     parser.add_argument(
         "--arch",
         type=str,
-        default="vit_small",
-        choices=["vit_small", "vit_base", "vit_large"],
+        default="vit_tiny",
+        choices=["vit_tiny", "vit_small", "vit_base", "vit_large"],
         help="""Name of architecture to train.""",
     )
     parser.add_argument(
