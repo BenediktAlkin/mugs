@@ -740,28 +740,28 @@ def train_one_epoch(
         with torch.no_grad():
             m = momentum_schedule[it]  # momentum parameter
             for param_q, param_k in zip(
-                student.module.backbone.parameters(),
+                student.backbone.parameters(),
                 teacher_without_ddp.backbone.parameters(),
             ):
                 param_k.data.mul_(m).add_((1 - m) * param_q.detach().data)
 
             if teacher_without_ddp.instance_head is not None:
                 for param_q, param_k in zip(
-                    student.module.instance_head.parameters(),
+                    student.instance_head.parameters(),
                     teacher_without_ddp.instance_head.parameters(),
                 ):
                     param_k.data.mul_(m).add_((1 - m) * param_q.detach().data)
 
             if teacher_without_ddp.local_group_head is not None:
                 for param_q, param_k in zip(
-                    student.module.local_group_head.parameters(),
+                    student.local_group_head.parameters(),
                     teacher_without_ddp.local_group_head.parameters(),
                 ):
                     param_k.data.mul_(m).add_((1 - m) * param_q.detach().data)
 
             if teacher_without_ddp.group_head is not None:
                 for param_q, param_k in zip(
-                    student.module.group_head.parameters(),
+                    student.group_head.parameters(),
                     teacher_without_ddp.group_head.parameters(),
                 ):
                     param_k.data.mul_(m).add_((1 - m) * param_q.detach().data)
