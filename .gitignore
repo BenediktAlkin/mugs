@@ -4,3 +4,5 @@
 .markdownlint.yaml
 .shellcheckrc
 .trunk/
+.idea
+exp/

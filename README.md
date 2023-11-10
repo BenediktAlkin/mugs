@@ -1,3 +1,8 @@
+# changes in fork
+- fixed issues with `from timm.data.transforms import _pil_interp`
+- port from multi-gpu only to single-gpu only
+
+
 # Mugs: A Multi-Granular Self-Supervised Learning Framework
 
 This is a PyTorch implementation of **Mugs** proposed by our paper "**Mugs: A Multi-Granular Self-Supervised Learning Framework**". [![arXiv](https://img.shields.io/badge/arXiv-2203.14415-b31b1b.svg?style=flat)](http://arxiv.org/abs/2203.14415)

@@ -24,7 +24,6 @@ from src.dataset import ImageFolder
 from src.RandAugment import rand_augment_transform
 from timm.data.constants import IMAGENET_DEFAULT_MEAN, IMAGENET_DEFAULT_STD
 from timm.data.random_erasing import RandomErasing
-from timm.data.transforms import _pil_interp
 
 
 class GaussianBlur(object):
@@ -111,7 +110,10 @@ def strong_transforms(
             img_mean=tuple([min(255, round(255 * x)) for x in mean]),
         )
         if interpolation and interpolation != "random":
-            aa_params["interpolation"] = _pil_interp(interpolation)
+            if interpolation == "bicubic":
+                aa_params["interpolation"] = 3
+            else:
+                raise NotImplementedError
         if auto_augment.startswith("rand"):
             secondary_tfl += [rand_augment_transform(auto_augment, aa_params)]
     if color_jitter is not None and color_aug:
@@ -132,7 +134,10 @@ def strong_transforms(
     if interpolation == "random":
         interpolation = (Image.BILINEAR, Image.BICUBIC)
     else:
-        interpolation = _pil_interp(interpolation)
+        if interpolation == "bicubic":
+            interpolation = 3
+        else:
+            raise NotImplementedError
     final_tfl = [
         transforms.RandomResizedCrop(
             size=img_size, scale=scale, ratio=ratio, interpolation=Image.BICUBIC
